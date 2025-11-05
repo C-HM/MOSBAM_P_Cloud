@@ -10,8 +10,32 @@ import { ecrivains } from "./mock-ecrivain.mjs";
 import { evaluations } from "./mock-evaluer.mjs";
 import { EvaluationModel } from "../models/evaluer.mjs";
 
+const DB_NAME = "db_gestionnaireLivre"
+
+// Connection to MySQL *without specifying a DB* (to create DB automatically)
+const rootSequelize = new Sequelize("mysql", "root", "root", {
+  host: "localhost",
+  port: 6033,
+  dialect: "mysql",
+  logging: false,
+});
+
+async function initializeDatabase() {
+  try {
+    // Create the database if it doesn’t exist
+    await rootSequelize.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;`);
+    console.log(`Database '${DB_NAME}' ensured to exist.`);
+  } catch (error) {
+    console.error("Error creating database:", error);
+  } finally {
+    await rootSequelize.close();
+  }
+}
+
+await initializeDatabase();
+
 const sequelize = new Sequelize(
-  "db_gestionnaireLivre", // Nom de la DB qui doit exister
+  DB_NAME, // Nom de la DB qui doit exister
   "root", // Nom de l'utilisateur
   "root", // Mot de passe de l'utilisateur
   {
