@@ -14,7 +14,7 @@ const link = computed(() => `/ouvrages/${props.book.ouvrage.ouvrage_id}`)
   <RouterLink :to="link" class="card">
     <div class="image-container">
       <img
-        :src="`http://localhost:3000${props.book.ouvrage.image}`"
+        :src="`${import.meta.env.VITE_BACKEND_BASE_URL}${props.book.ouvrage.image}`"
         alt="image de couverture du livre"
       />
     </div>

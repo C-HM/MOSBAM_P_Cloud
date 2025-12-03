@@ -212,7 +212,7 @@ const clickFilter = () => {
         class="uploadedImage"
         :src="
           book && book.image && typeof book.image === 'string'
-            ? `http://localhost:3000${book.image}`
+            ? `${import.meta.env.VITE_BACKEND_BASE_URL}${book.image}`
             : ''
         "
         alt="Image actuelle"

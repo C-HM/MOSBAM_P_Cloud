@@ -106,7 +106,7 @@ function goToBook(ouvrageId) {
       :key="bc.book.ouvrage_id"
       @click="goToBook(bc.book.ouvrage_id)"
     >
-      <img :src="`http://localhost:3000${bc.book.image}`" alt="image de couverture" />
+      <img :src="`${import.meta.env.VITE_BACKEND_BASE_URL}${bc.book.image}`" alt="image de couverture" />
       <div class="book-info">
         <p class="book-title">{{ bc.book.titre }}</p>
         <ul class="profile-list">

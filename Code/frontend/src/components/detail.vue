@@ -112,7 +112,7 @@ const canUpdate = computed(() => {
   <div class="book-detail">
     <span v-if="moyenneNote !== null" class="moyenne-note"> ⭐ {{ moyenneNote }}/5 </span>
     <img
-      :src="`http://localhost:3000${props.book.ouvrage.image}`"
+      :src="`${import.meta.env.VITE_BACKEND_BASE_URL}${props.book.ouvrage.image}`"
       :alt="`Couverture de ${book.titre}`"
       class="cover"
     />
