@@ -52,6 +52,5 @@ jobs:
         with:
           app-name: "Passionlecture-Bammos"
           slot-name: "Production"
-          # On déploie le backend (contenu du dossier Code/backend)
-          package: ./Code/backend
+          package: .
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7C1F65A0276F4119A3FF5D45C844AD7E }}
