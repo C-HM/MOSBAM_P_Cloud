@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { auth } from "./auth/auth.mjs";
@@ -15,11 +16,13 @@ const app = express();
 // Configuration de CORS
 app.use(
   cors({
-    origin: "http://localhost:5173", // Autoriser uniquement cette origine
-    methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes autorisées
-    credentials: true, // Si vous utilisez des cookies ou des headers d'authentification
+    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
+
+const port = process.env.PORT || 3000;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -46,8 +49,6 @@ app.post("/api/upload", upload.single("image"), (req, res) => {
 app.use("/images", express.static(path.join(__dirname, "public/images")));
 
 app.use(express.json());
-
-const port = 3000;
 
 import { loginRouter } from "./routes/login.mjs";
 app.use("/api/login", loginRouter);

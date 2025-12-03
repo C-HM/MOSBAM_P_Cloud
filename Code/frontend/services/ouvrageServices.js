@@ -4,7 +4,7 @@ import axios from 'axios'
 let token = localStorage.getItem('token') || null
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3000/api/',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: false,
   headers: {
     Accept: 'application/json',
@@ -12,6 +12,7 @@ const apiClient = axios.create({
     Authorization: token,
   },
 })
+
 apiClient.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
   if (token) {

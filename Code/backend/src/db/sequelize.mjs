@@ -10,12 +10,17 @@ import { ecrivains } from "./mock-ecrivain.mjs";
 import { evaluations } from "./mock-evaluer.mjs";
 import { EvaluationModel } from "../models/evaluer.mjs";
 
-const DB_NAME = "db_gestionnaireLivre"
+const DB_NAME = process.env.DB_NAME || "db_gestionnaireLivre";
+
+const DB_HOST = process.env.DB_HOST || "localhost";
+const DB_PORT = parseInt(process.env.DB_PORT || "6033", 10);
+const DB_USER = process.env.DB_USER || "root";
+const DB_PASSWORD = process.env.DB_PASSWORD || "root";
 
 // Connection to MySQL *without specifying a DB* (to create DB automatically)
-const rootSequelize = new Sequelize("mysql", "root", "root", {
-  host: "localhost",
-  port: 6033,
+const rootSequelize = new Sequelize("mysql", DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  port: DB_PORT,
   dialect: "mysql",
   logging: false,
 });
@@ -34,17 +39,13 @@ async function initializeDatabase() {
 
 await initializeDatabase();
 
-const sequelize = new Sequelize(
-  DB_NAME, // Nom de la DB qui doit exister
-  "root", // Nom de l'utilisateur
-  "root", // Mot de passe de l'utilisateur
-  {
-    host: "localhost",
-    port: 6033,
-    dialect: "mysql",
-    logging: false,
-  }
-);
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  port: DB_PORT,
+  dialect: "mysql",
+  logging: false,
+});
+
 // Le modèle product
 const Ouvrage = OuvrageModel(sequelize, DataTypes);
 const User = UserModel(sequelize, DataTypes);
