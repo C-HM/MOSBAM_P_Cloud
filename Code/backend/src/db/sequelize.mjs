@@ -14,7 +14,7 @@ const DB_NAME = process.env.DB_NAME || "db_gestionnaireLivre";
 
 const DB_HOST = process.env.DB_HOST || "localhost";
 const DB_PORT = parseInt(process.env.DB_PORT || "6033", 10);
-const DB_USER = process.env.DB_USER || "root";
+const DB_USER = process.env.DB_USER || process.env.DB_USERNAME || "root";
 const DB_PASSWORD = process.env.DB_PASSWORD || "root";
 
 // Connection to MySQL *without specifying a DB* (to create DB automatically)

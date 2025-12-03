@@ -94,10 +94,11 @@ If you are using a **Shared MySQL Server** and want to deploy manually (e.g., vi
 Since you already have a database server:
 
 1.  **Get Credentials**: Ask your administrator for:
-    - `DB_HOST` (Server name)
-    - `DB_USER` (Your username)
-    - `DB_PASSWORD` (Your password)
-    - `DB_NAME` (Your specific database name)
+    - `DB_HOST`: `cmid3b-srv-db.mysql.database.azure.com`
+    - `DB_USERNAME`: `cmi3badmin` (I have updated the code to support this variable)
+    - `DB_PASSWORD`: `.etml-`
+    - `DB_PORT`: `3306`
+    - **Important**: You also need `DB_NAME`. If you don't have one assigned, pick a name like `db_mosbam_p_cloud` and add it as `DB_NAME`.
 2.  **Configure Backend**: In your Azure Web App (Backend), go to **Settings** -> **Environment variables** and add these values.
 
 ## 2. Manual Backend Deployment (Zip to Web App)
