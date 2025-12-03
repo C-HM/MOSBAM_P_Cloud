@@ -84,3 +84,45 @@ This guide outlines the steps to deploy your Vue.js frontend to **Azure Static W
 1.  Open your Static Web App URL.
 2.  Check if images load (they should point to your backend URL).
 3.  Try to log in or view books.
+
+# Alternative: Manual Zip Deployment & Shared DB
+
+If you are using a **Shared MySQL Server** and want to deploy manually (e.g., via Zip file) instead of GitHub Actions.
+
+## 1. Shared Database Configuration
+
+Since you already have a database server:
+
+1.  **Get Credentials**: Ask your administrator for:
+    - `DB_HOST` (Server name)
+    - `DB_USER` (Your username)
+    - `DB_PASSWORD` (Your password)
+    - `DB_NAME` (Your specific database name)
+2.  **Configure Backend**: In your Azure Web App (Backend), go to **Settings** -> **Environment variables** and add these values.
+
+## 2. Manual Backend Deployment (Zip to Web App)
+
+1.  **Prepare**:
+    - Navigate to `Code/backend`.
+    - Select all files inside `Code/backend` (src, package.json, etc.) and **Zip them**. Name it `backend.zip`.
+2.  **Deploy**:
+    - Go to your **Azure Web App (Backend)** in the Portal.
+    - Search for **"Advanced Tools"** (Kudu) -> Click **Go**.
+    - In the new window, go to **Tools** -> **Zip Push Deploy**.
+    - Drag and drop your `backend.zip` into the folder area.
+    - Azure will automatically unzip and run `npm install`.
+
+## 3. Manual Frontend Deployment (Zip to Web App)
+
+If you want to deploy the frontend to a **Web App** (not Static Web App) manually:
+
+1.  **Build**:
+    - On your local machine, run `npm run build` inside `Code/frontend`.
+    - This creates a `dist` folder.
+2.  **Prepare**:
+    - Zip the **contents** of the `dist` folder. Name it `frontend.zip`.
+3.  **Deploy**:
+    - Create a **new Azure Web App** (select **Windows** OS for easiest static file hosting).
+    - Go to **Advanced Tools** (Kudu) -> **Tools** -> **Zip Push Deploy**.
+    - Drag and drop `frontend.zip`.
+    - The Windows Web App (IIS) will automatically serve your `index.html`.
