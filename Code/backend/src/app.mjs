@@ -93,3 +93,12 @@ app.use(({ res }) => {
 app.listen(port, () => {
   console.log(`Example app listening on port http://localhost:${port}`);
 });
+
+// Serve Frontend Static Files
+const clientBuildPath = path.join(__dirname, "client");
+app.use(express.static(clientBuildPath));
+
+// SPA Catch-all Route (must be last)
+app.get("*", (req, res) => {
+  res.sendFile(path.join(clientBuildPath, "index.html"));
+});

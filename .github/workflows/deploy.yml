@@ -10,60 +10,46 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy-backend:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      # 1. Setup Node.js
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
           node-version: "20.x"
 
-      - name: Install and Build Backend
-        run: |
-          cd Code/backend
-          npm install
-          # No build script for backend, just start. But we prune dev deps for prod.
-          npm prune --production
-
-      - name: Zip Backend Artifact
-        run: |
-          cd Code/backend
-          zip -r ../../backend.zip .
-
-      - name: "Deploy to Azure Web App (Backend)"
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ secrets.AZURE_WEBAPP_BACKEND_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_BACKEND_PUBLISH_PROFILE }}
-          package: backend.zip
-
-  build-and-deploy-frontend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js version
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20.x"
-
+      # 2. Build Frontend
       - name: Install and Build Frontend
         run: |
           cd Code/frontend
           npm install
           npm run build
         env:
-          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          VITE_API_BASE_URL: /api/ # Relative path since it's same domain
+          VITE_BACKEND_BASE_URL: ""
 
-      - name: Deploy to Azure Static Web App
-        id: builddeploy
-        uses: Azure/static-web-apps-deploy@v1
+      # 3. Prepare Backend & Integrate Frontend
+      - name: Prepare Deployment Artifact
+        run: |
+          # Install backend deps
+          cd Code/backend
+          npm install
+          npm prune --production
+
+          # Copy frontend build to backend/client
+          mkdir -p client
+          cp -r ../frontend/dist/* client/
+
+          # Zip everything
+          zip -r ../../deploy.zip .
+
+      # 4. Deploy to Azure Web App
+      - name: "Deploy to Azure Web App"
+        uses: azure/webapps-deploy@v2
         with:
-          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APP_TOKEN }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          action: "upload"
-          app_location: "Code/frontend" # App source code path
-          api_location: "" # Api source code path - optional
-          output_location: "dist" # Built app content directory - optional
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }} # Single Secret Name
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: deploy.zip
