@@ -1,129 +1,108 @@
-# MOSBAM_P_Cloud
+# MOSBAM P_Cloud Project - Azure Deployment Guide
 
-# Azure Deployment Guide (Separate Services)
+This guide details the strict steps to deploy the MOSBAM Cloud WebApp to Azure, compliant with the school project requirements (PDF).
 
-This guide outlines the steps to deploy your Vue.js frontend to **Azure Static Web Apps** and your Node.js backend to **Azure App Service**.
+## 1. Prerequisites & Rules
 
-## Prerequisites
-
-- An active Azure account.
-- This project pushed to a GitHub repository.
-
----
-
-## Step 1: Database Setup (Azure Database for MySQL)
-
-1.  **Create Resource**: In the Azure Portal, create a new resource and search for **"Azure Database for MySQL - Flexible Server"**.
-2.  **Configure**:
-    - Choose a Resource Group.
-    - Set a Server name.
-    - **Authentication**: Select "MySQL authentication only" and set an Admin username and password. **Write these down.**
-3.  **Networking**:
-    - In the Networking tab, check **"Allow public access from any Azure service within Azure to this server"**. This allows your backend App Service to connect.
-    - Add your current IP address to the firewall rules if you want to connect from your local machine.
-4.  **Get Connection Details**: Once created, go to the "Connect" or "Overview" blade to find the **Server name** (Host).
+- **Resource Group**: Use the one provided by your teacher.
+- **Resource Tagging**: **CRITICAL**. Every resource you create in Azure MUST have the tag:
+  - **Name**: `Groupe` (or similar identifier used by your class)
+  - **Value**: `%nom_groupe%` (Your 3-letter group code, e.g., `ABC`).
+- **Cost Management**: You are responsible for stopping resources when not in use.
+- **Triggers**: The deployment pipeline runs on `push` to main OR on `git tag` (e.g., `v1.0.0`).
 
 ---
 
-## Step 2: Backend Deployment (Azure App Service)
+## 2. Infrastructure Setup (Azure Portal)
 
-1.  **Create Resource**: Create a new **"Web App"** in Azure.
-    - **Publish**: Code.
-    - **Runtime stack**: Node 20 LTS (or your preferred version).
-    - **OS**: Linux.
-2.  **Environment Variables**:
-    - Go to your new Web App -> **Settings** -> **Environment variables**.
-    - Add the following settings (using your database details from Step 1):
-      - `DB_HOST`: Your MySQL Server name (e.g., `myserver.mysql.database.azure.com`)
-      - `DB_USER`: Your Admin username
-      - `DB_PASSWORD`: Your Admin password
-      - `DB_NAME`: `db_gestionnaireLivre` (or your preferred DB name)
-      - `DB_PORT`: `3306`
-3.  **Deploy Code**:
-    - Go to **Deployment Center**.
-    - Source: **GitHub**.
-    - Authorize and select your repository.
-    - **Build provider**: GitHub Actions.
-    - **Runtime stack**: Node.
-    - **Version**: Node 20.
-    - **App location**: `Code/backend` (Important! This tells Azure where your backend code lives).
-    - Click **Save**. This will trigger a deployment.
+49b317614ec4c177d4500aaadb604763e9f217eaca35414279f37d54cf6fedd303-13cbb546-006a-42eb-9e10-fa49920263f600309260d4a3f003
 
-> [!WARNING] > **Database Reset Issue**: Your current `sequelize.mjs` contains `.sync({ force: true })`. This **deletes all data** every time the backend restarts. For production, you **must** change this to `force: false` or remove the `force` option entirely.
+### A. Backend - Azure App Service (Web App)
 
----
+1. Search for **"Web App"** -> Create.
+2. **Basics**:
+   - **Resource Group**: Select your class group.
+   - **Name**: `mosbam-backend-grpXY` (Unique).
+   - **Publish**: `Code`.
+   - **Runtime stack**: `Node 20 LTS`.
+   - **OS**: `Linux`.
+   - **Region**: `France Central`.
+   - **Pricing Plan**: `Free F1` (or Basic B1).
+3. **Tags** (Important):
+   - Key: `Groupe` | Value: `[YOUR_GROUP_ID]`
+4. **Review + create**.
 
-## Step 3: Frontend Deployment (Azure Static Web Apps)
+### B. Frontend - Azure Static Web App
 
-1.  **Create Resource**: Create a new **"Static Web App"** in Azure.
-    - **Plan type**: Free (usually sufficient).
-    - **Deployment details**: Select **GitHub**.
-    - Authorize and select your repository.
-2.  **Build Details**:
-    - **Build Presets**: Vue.js.
-    - **App location**: `/Code/frontend`
-    - **Api location**: (Leave empty)
-    - **Output location**: `dist`
-3.  **Environment Variables**:
-    - Once created, go to **Settings** -> **Environment variables**.
-    - Add: `VITE_BACKEND_BASE_URL`
-    - Value: The URL of your Backend Web App (from Step 2), e.g., `https://my-backend-app.azurewebsites.net`.
-    - **Important**: For Vite, environment variables must be present _during the build_. You might need to re-run the GitHub Action workflow after adding this setting.
+1. Search for **"Static Web Apps"** -> Create.
+2. **Basics**:
+   - **Resource Group**: Same group.
+   - **Name**: `mosbam-frontend-grpXY`.
+   - **Plan type**: `Free`.
+   - **Deployment details**: Select **"Other"**.
+3. **Tags**:
+   - Key: `Groupe` | Value: `[YOUR_GROUP_ID]`
+4. **Review + create**.
+5. Go to the resource -> **Manage deployment token** -> Copy it.
 
 ---
 
-## Step 4: Final Configuration (CORS)
+## 3. Database Configuration
 
-1.  **Update Backend CORS**:
-    - Your backend currently might be blocking requests from your new frontend domain.
-    - In `Code/backend/src/app.mjs` (or wherever CORS is configured), ensure the `origin` allows your new Static Web App URL (e.g., `https://brave-river-123.azurestaticapps.net`).
-    - Alternatively, in the Azure Portal for the Backend Web App, go to **API** -> **CORS** and add your frontend URL there (if your code delegates CORS to Azure, but usually it's handled in code).
+**Server**: `cmid3b-srv-db.mysql.database.azure.com` | **User**: `cmi3badmin` | **Pass**: `.etml-`
 
-## Step 5: Verify
+1. **Create Database**: Connect via MySQL Workbench and run:
+   ```sql
+   CREATE DATABASE db_mosbam_grpXY;
+   ```
+2. **Configure Backend**:
+   - Go to your Backend Web App -> **Settings** -> **Environment variables**.
+   - Add:
+     - `DB_HOST`: `cmid3b-srv-db.mysql.database.azure.com`
+     - `DB_USER`: `cmi3badmin`
+     - `DB_PASSWORD`: `.etml-`
+     - `DB_PORT`: `3306`
+     - `DB_NAME`: `db_mosbam_grpXY`
+     - `CORS_ORIGIN`: `*` (or your Static Web App URL)
+     - `PORT`: `8080` (Internal port)
 
-1.  Open your Static Web App URL.
-2.  Check if images load (they should point to your backend URL).
-3.  Try to log in or view books.
+---
 
-# Alternative: Manual Zip Deployment & Shared DB
+## 4. GitHub Actions Configuration
 
-If you are using a **Shared MySQL Server** and want to deploy manually (e.g., via Zip file) instead of GitHub Actions.
+1. In your Repo -> **Settings** -> **Secrets and variables** -> **Actions**.
+2. Add these Secrets:
 
-## 1. Shared Database Configuration
+| Secret Name                            | Value                                                                                       |
+| -------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `AZURE_WEBAPP_BACKEND_NAME`            | Your Backend App Name (e.g., `mosbam-backend-grpXY`)                                        |
+| `AZURE_WEBAPP_BACKEND_PUBLISH_PROFILE` | Content of the Publish Profile file (Download from Backend Overview -> Get publish profile) |
+| `AZURE_STATIC_WEB_APP_TOKEN`           | The Deployment Token from Step 2.B.5                                                        |
+| `VITE_API_BASE_URL`                    | `https://mosbam-backend-grpXY.azurewebsites.net/api/` (Must match your backend URL)         |
 
-Since you already have a database server:
+---
 
-1.  **Get Credentials**: Ask your administrator for:
-    - `DB_HOST`: `cmid3b-srv-db.mysql.database.azure.com`
-    - `DB_USERNAME`: `cmi3badmin` (I have updated the code to support this variable)
-    - `DB_PASSWORD`: `.etml-`
-    - `DB_PORT`: `3306`
-    - **Important**: You also need `DB_NAME`. If you don't have one assigned, pick a name like `db_mosbam_p_cloud` and add it as `DB_NAME`.
-2.  **Configure Backend**: In your Azure Web App (Backend), go to **Settings** -> **Environment variables** and add these values.
+## 5. Deployment & Triggers
 
-## 2. Manual Backend Deployment (Zip to Web App)
+The workflow is configured to run automatically:
 
-1.  **Prepare**:
-    - Navigate to `Code/backend`.
-    - Select all files inside `Code/backend` (src, package.json, etc.) and **Zip them**. Name it `backend.zip`.
-2.  **Deploy**:
-    - Go to your **Azure Web App (Backend)** in the Portal.
-    - Search for **"Advanced Tools"** (Kudu) -> Click **Go**.
-    - In the new window, go to **Tools** -> **Zip Push Deploy**.
-    - Drag and drop your `backend.zip` into the folder area.
-    - Azure will automatically unzip and run `npm install`.
+1. **Push** to `main`: `git push origin main`
+2. **Tag**: `git tag v1.0.0` -> `git push origin v1.0.0`
 
-## 3. Manual Frontend Deployment (Zip to Web App)
+### Cost Management (Daily Shutdown)
 
-If you want to deploy the frontend to a **Web App** (not Static Web App) manually:
+To comply with "automatiser l’arrêt des ressources" or manual stop:
 
-1.  **Build**:
-    - On your local machine, run `npm run build` inside `Code/frontend`.
-    - This creates a `dist` folder.
-2.  **Prepare**:
-    - Zip the **contents** of the `dist` folder. Name it `frontend.zip`.
-3.  **Deploy**:
-    - Create a **new Azure Web App** (select **Windows** OS for easiest static file hosting).
-    - Go to **Advanced Tools** (Kudu) -> **Tools** -> **Zip Push Deploy**.
-    - Drag and drop `frontend.zip`.
-    - The Windows Web App (IIS) will automatically serve your `index.html`.
+- **Backend**: Go to the App Service -> **Overview** -> **Stop**. (Do this at the end of every day).
+- **Database**: The shared server is managed by teachers, you don't stop it.
+- **Frontend**: Static Web Apps are serverless and don't need stopping (Free tier).
+
+## 6. Future: MSAL Authentication
+
+When you implement MSAL (Phase 3), you will need to:
+
+1. Register an App in **Microsoft Entra ID**.
+2. Add **Redirect URIs**:
+   - Local: `http://localhost:5173`
+   - Cloud: Your Static Web App URL (e.g., `https://brave-cliff-123.azurestaticapps.net`)
+3. Tag the App Registration with `%nom_groupe%` if possible/required.
