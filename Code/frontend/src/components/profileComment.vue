@@ -92,6 +92,7 @@ onMounted(() => {
 function goToBook(ouvrageId) {
   router.push(`/ouvrages/${ouvrageId}`)
 }
+const backendBaseUrl = import.meta.env.VITE_BACKEND_BASE_URL
 </script>
 
 <template>
@@ -106,7 +107,7 @@ function goToBook(ouvrageId) {
       :key="bc.book.ouvrage_id"
       @click="goToBook(bc.book.ouvrage_id)"
     >
-      <img :src="`${import.meta.env.VITE_BACKEND_BASE_URL}${bc.book.image}`" alt="image de couverture" />
+        <img :src="`${backendBaseUrl}${bc.book.image}`" alt="image de couverture" />
       <div class="book-info">
         <p class="book-title">{{ bc.book.titre }}</p>
         <ul class="profile-list">

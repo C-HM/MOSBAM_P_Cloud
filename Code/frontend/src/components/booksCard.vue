@@ -8,13 +8,14 @@ const props = defineProps({
   },
 })
 const link = computed(() => `/ouvrages/${props.book.ouvrage.ouvrage_id}`)
+const backendBaseUrl = import.meta.env.VITE_BACKEND_BASE_URL
 </script>
 
 <template>
   <RouterLink :to="link" class="card">
     <div class="image-container">
       <img
-        :src="`${import.meta.env.VITE_BACKEND_BASE_URL}${props.book.ouvrage.image}`"
+        :src="`${backendBaseUrl}${props.book.ouvrage.image}`"
         alt="image de couverture du livre"
       />
     </div>

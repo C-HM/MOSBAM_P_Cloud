@@ -192,6 +192,7 @@ const clickFilter = () => {
     open.value = null
   }
 }
+const backendBaseUrl = import.meta.env.VITE_BACKEND_BASE_URL
 </script>
 
 <template>
@@ -212,7 +213,7 @@ const clickFilter = () => {
         class="uploadedImage"
         :src="
           book && book.image && typeof book.image === 'string'
-            ? `${import.meta.env.VITE_BACKEND_BASE_URL}${book.image}`
+            ? `${backendBaseUrl}${book.image}`
             : ''
         "
         alt="Image actuelle"
