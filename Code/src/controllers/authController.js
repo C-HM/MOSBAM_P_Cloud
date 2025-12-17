@@ -1,31 +1,55 @@
-import jwt from "jsonwebtoken";
-import "dotenv/config";
+import { msalConfig, REDIRECT_URI, POST_LOGOUT_REDIRECT_URI } from "../authConfig.js";
+import { ConfidentialClientApplication, InteractionRequiredAuthError } from "@azure/msal-node";
 
-const auth = (req, res, next) => {
-  if (!req.cookies.P_Dev) {
-    const message = `Vous n'avez pas fourni de jeton d'authentification. Ajoutez-en un dans les cookies.`;
-    return res.redirect("/login");
-  } else {
-    jwt.verify(
-      req.cookies.P_Dev,
-      process.env.SECRET_KEY,
-      (error, decodedToken) => {
-        if (error) {
-          const message = `L'utilisateur n'est pas autorisé à accéder à cette ressource.`;
-          return res.status(401).json({ message, data: error });
-        }
-        console.log(decodedToken);
-        const { username, user_id } = decodedToken;
-        if (req.body.username && req.body.username !== username) {
-          const message = `Le nom d'utilisateur est invalide`;
-          return res.status(401).json({ message });
-        } else {
-          req.session.user = { username, user_id };
-          next();
-        }
-      }
-    );
-  }
+const msalInstance = new ConfidentialClientApplication(msalConfig);
+
+export const getAuthCodeUrl = async (req, res, next) => {
+    const authCodeUrlParameters = {
+        scopes: ["user.read"],
+        redirectUri: REDIRECT_URI,
+    };
+
+    try {
+        const authCodeUrl = await msalInstance.getAuthCodeUrl(authCodeUrlParameters);
+        res.redirect(authCodeUrl);
+    } catch (error) {
+        next(error);
+    }
 };
 
-export { auth };
+export const acquireToken = async (req, res, next) => {
+    const tokenRequest = {
+        code: req.body.code, // This might need to come from req.query.code or req.body depending on POST vs GET redirect
+        scopes: ["user.read"],
+        redirectUri: REDIRECT_URI,
+    };
+    
+    if(req.query.code){
+        tokenRequest.code = req.query.code;
+    }
+
+    try {
+        const response = await msalInstance.acquireTokenByCode(tokenRequest);
+        req.session.isAuthenticated = true;
+        req.session.user = response.account;
+        
+        res.redirect("/profile");
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const logout = (req, res) => {
+    req.session.destroy(() => {
+        res.redirect(POST_LOGOUT_REDIRECT_URI);
+    });
+};
+
+export const isAuthenticated = (req, res, next) => {
+    if (req.session.isAuthenticated || req.session.user) {
+        return next();
+    }
+    res.redirect("/login");
+};
+
+export const auth = isAuthenticated;

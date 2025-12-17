@@ -5,6 +5,7 @@ const get = async (req, res) => {
   let historique;
   let response;
   let chartData;
+  let rawData = [];
   try {
     const user_id = await queryDatabase(
       `SELECT user_id FROM t_user Where username='${req.session.user.username}'`
@@ -22,7 +23,7 @@ const get = async (req, res) => {
       WHERE lf.user_id = ?
       GROUP BY s.continent;
     `;
-    const rawData = await queryDatabase(query, [user_id[0].user_id]);
+    rawData = await queryDatabase(query, [user_id[0].user_id]);
   } catch (error) {
     console.error("Erreur lors de la récupération des sites:", error);
   }
