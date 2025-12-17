@@ -5,11 +5,13 @@
   "description": "module 426 - site unesco",
   "main": "src/app.js",
   "scripts": {
-    "start": "node src/app.js"
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
   },
   "author": "po77qxd",
   "license": "ISC",
   "dependencies": {
+    "@azure/msal-node": "^3.8.4",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
