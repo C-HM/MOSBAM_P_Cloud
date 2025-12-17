@@ -7,19 +7,20 @@ version: "3.3"
 services:
   db:
     image: mysql:8.0.30
-    container_name: db
+    container_name: P_DEV_426
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: db_user
       MYSQL_PASSWORD: db_user_pass
     restart: always
     ports:
-      - "6033:3306"
+      - "6035:3306"
     volumes:
+      - ./BaseDonnée/db_unesco.sql:/docker-entrypoint-initdb.d/db_unesco.sql
       - dbdata:/var/lib/mysql
   phpmyadmin:
     image: phpmyadmin:5.2.0
-    container_name: pma
+    container_name: phpma
     links:
       - db
     environment:
@@ -28,7 +29,7 @@ services:
       PMA_ARBITRARY: 1
     restart: always
     ports:
-      - 8081:80
+      - 8085:80
 
 # The database will be persistent among containers restarts.
 volumes:

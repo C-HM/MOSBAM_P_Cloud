@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Accueil</title>    
+    <script src="https://unpkg.com/maplibre-gl@^5.1.0/dist/maplibre-gl.js"></script>
+    <link
+      href="https://unpkg.com/maplibre-gl@^5.1.0/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../static/css/home.css" />
+  </head>
+  <body>
+
+    <%- include('partials/Header', { user: user }) %>
+    <div id="background">
+    <button id="switch-map-button" onclick="switchMaps()">3d</button>
+    <input type="text" placeholder="rechercher pays" id="country-search"/>
+    <input type="text" placeholder="rechercher region" id="region-search"/>
+
+    <div id="map-area">
+      <div id="map" style="width: 1200px; height: 700px; min-width: 1200px; border-radius: 20px; margin-top: 2%;"></div>
+
+      <div id="details-area">
+        <div id="site_title">Sélectionnez un site sur la carte</div>
+        <div id="site_description">
+          Découvrez ici la description du site UNESCO sélectionné.<br />
+          Cliquez sur un point de la carte pour afficher les détails.
+        </div>
+
+        <button id="historiqueButton" style="display:none;" onclick="showHistorique()">Historique</button>
+        <button id="wishlistButton" style="display:none;" onclick="addToWishlist()">Ajouter à la Wishlist</button>
+
+        <!-- Hidden spans for IDs -->
+        <span id="wishlistId" style="display:none;"></span>
+      </div>
+
+     </div>
+    </div>
+
+    <section class="intro">
+      <h2>Bienvenue sur UNESCO Explorer</h2>
+      <p>
+        Votre guide interactif pour explorer les sites classés au patrimoine
+        mondial de l'UNESCO. Grâce à notre carte dynamique, plongez dans
+        l’histoire et la beauté des lieux emblématiques à travers le monde.
+      </p>
+    </section>
+
+    <section class="owner">
+      <!-- Remplace "avatar.png" par la vraie photo ou un avatar -->
+      <img
+        src="/static/image/avatar.png"
+        alt="Photo du propriétaire du site"
+        class="owner-photo"
+      />
+      <div class="owner-text">
+        <h3>Aurelie Curchod, propriétaire du site</h3>
+        <p>Votre texte, mettez ce que vous souhaitez !</p>
+        </div>
+       </div>
+    </section>
+    <script type="module" src="/static/map-key.js" defer></script>
+    <script type="module" src="/static/mapv2.js" defer></script>
+    <%- include('partials/Footer')%>
+  </body>
+</html>

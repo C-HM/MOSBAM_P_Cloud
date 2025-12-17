@@ -1,0 +1,41 @@
+.partners {
+  background-color: #4f4f56;
+  padding: 20px 0 20px 0;
+  width: 100%;
+  text-align: center;
+  bottom: 0;
+  left: 0;
+  flex: 1;
+}
+
+.partners-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px; /* espace entre le logo et le texte */
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap; /* pour rester responsive */
+}
+
+.partners-grid img {
+  width: 250px;
+  max-height: 180px;
+  object-fit: contain;
+  padding: 10px;
+  border-radius: 5px;
+  margin-left: 200px;
+}
+
+.contact-info {
+  color: white;
+  font-size: 14px;
+  text-align: left;
+  margin-right: 200px;
+}

@@ -1,0 +1,47 @@
+<header class="header">
+  <link rel="stylesheet" href="../../../static/css/header.css" />
+  <style>
+    /* Assurez-vous que le menu est masqué par défaut */
+    #dropdown-menu {
+      display: none;
+    }
+  </style>
+  <img
+    src="/static/image/logo-ACD.png"
+    alt="ACD Motorsport Logo"
+    class="logo"
+  />
+  <nav class="nav">
+    <ul class="nav-list">
+      <li>
+        <a href="/accueil">Accueil</a>
+      </li>
+      <li>
+        <a href="/forum">Forum</a>
+      </li>
+    </ul>
+  </nav>
+  <% if (user) { %>
+  <div id="profile-menu">
+    <button class="profile-circle" onclick="showMenu()">
+      <%= user.username[0] %>
+    </button>
+    <div id="dropdown-menu" class="dropdown-menu">
+      <a href="/profile">Mon Profil</a>
+      <a href="/logout">Se Déconnecter</a>
+    </div>
+  </div>
+  <% } else { %>
+  <a href="/login" class="connexion">Connexion</a>
+  <% } %>
+  <script>
+    const showMenu = () => {
+      const menu = document.getElementById("dropdown-menu");
+      if (menu.style.display === "none" || menu.style.display === "") {
+        menu.style.display = "block"; // Affiche le menu
+      } else {
+        menu.style.display = "none"; // Masque le menu
+      }
+    };
+  </script>
+</header>
