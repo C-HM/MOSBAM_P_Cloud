@@ -63,7 +63,10 @@ app.use("/static", express.static(path.join(__dirname, "../static")));
 app.set("views", "src/views");
 app.set("view engine", "ejs");
 
+import { authRouter } from "./routes/authRoutes.js";
+
 // Déclaration des routes
+app.use("/auth", authRouter);
 app.use("/accueil", homeRouter);
 app.use("/infouser", auth, infouserRouter);
 app.use("/security", auth, securitypageRouter);
