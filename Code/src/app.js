@@ -218,62 +218,30 @@ app.use(({ res }) => {
   res.status(404).json(message); // Une page HTML serait plus adaptée si l'application utilise EJS
 });
 const sites = await queryDatabase(
-      `-- phpMyAdmin SQL Dump
--- version 5.2.0
--- https://www.phpmyadmin.net/
---
--- Hôte : db:3306
--- Généré le : lun. 26 mai 2025 à 10:59
--- Version du serveur : 8.0.30
--- Version de PHP : 8.0.27
+      `
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Base de données : "db_unesco"
---
-
--- Création de la base de données "db_unesco"
 CREATE DATABASE IF NOT EXISTS "db_unesco" DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
 
--- Utilisation de la base de données "db_unesco"
 USE db_unesco;
 
--- --------------------------------------------------------
-
---
--- Structure de la table "t_avoir"
---
 
 CREATE TABLE "t_avoir" (
   "liste_favoris_id" int NOT NULL,
   "site_id" int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------
-
---
--- Structure de la table "t_contenir"
---
 
 CREATE TABLE "t_contenir" (
   "historique_id" int NOT NULL,
   "site_id" int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------
 
---
--- Structure de la table "t_historique"
---
 
 CREATE TABLE "t_historique" (
   "historique_id" int NOT NULL,
@@ -281,22 +249,13 @@ CREATE TABLE "t_historique" (
   "user_id" int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------
 
---
--- Structure de la table "t_liste_favoris"
---
 
 CREATE TABLE "t_liste_favoris" (
   "liste_favoris_id" int NOT NULL,
   "user_id" int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------
-
---
--- Structure de la table "t_publication"
---
 
 CREATE TABLE "t_publication" (
   "publication_id" int NOT NULL,
@@ -307,11 +266,7 @@ CREATE TABLE "t_publication" (
   "user_id" int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------
 
---
--- Structure de la table "t_sites"
---
 
 CREATE TABLE "t_sites" (
   "site_id" int NOT NULL,
@@ -325,9 +280,6 @@ CREATE TABLE "t_sites" (
   "continent" varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table "t_sites"
---
 
 INSERT INTO "t_sites" ("site_id", "categorie", "nom", "description", "lon", "lat", "region", "states", "continent") VALUES
 (1, 'Natural', 'Galápagos Islands', 'Situated in the Pacific Ocean some 1,000 km from the South American continent, these 19 islands and the surrounding marine reserve have been called a unique ‘living museum and showcase of evolution’. Located at the confluence of three ocean currents, the Galápagos are a ‘melting pot’ of marine species. Ongoing seismic and volcanic activity reflects the processes that formed the islands. These processes, together with the extreme isolation of the islands, led to the development of unusual animal life – such as the land iguana, the giant tortoise and the many types of finch – that inspired Charles Darwin’s theory of evolution by natural selection following his visit in 1835.', '-90.5013', '-0.6899', 'Latin America and the Caribbean', '-Ecuador', 'South America'),
@@ -1467,11 +1419,6 @@ INSERT INTO "t_sites" ("site_id", "categorie", "nom", "description", "lon", "lat
 (1606, 'Natural', 'Migratory Bird Sanctuaries along the Coast of Yellow Sea-Bohai Gulf of China (Phase I)', 'The property features an intertidal mudflat system considered to be the largest in the world. These mudflats, as well as marshes and shoals, are exceptionally productive and serve as growth areas for many species of fish and crustaceans. The intertidal areas of the Yellow Sea/Gulf of Bohai are of global importance for the gathering of many migratory bird species that use the East Asian-Australasian flyway. Large gatherings of birds, including some of the world\'s most endangered species, depend on the coastline as a stopover to moult, rest, winter or nest.', '121.0168', '32.9319', 'Asia and the Pacific', '-China', 'Asia'),
 (1610, 'Cultural', 'Ombilin Coal Mining Heritage of Sawahlunto', 'Built for the extraction, processing and transport of high-quality coal in an inaccessible region of Sumatra, this industrial site was developed by the Netherlands East Indies’ government in the globally important period of industrialisation from the late 19th to the beginning of the 20th century. The workforce was recruited from the local Minangkabau people and supplemented by Javanese and Chinese contract workers, and convict labourers from Dutch-controlled areas. It comprises the mining site and company town, coal storage facilities at the port of Emmahaven and the railway network linking the mines to the coastal facilities. The Ombilin Coal Mining Heritage was built as an integrated system that enabled the efficient deep-bore extraction, processing, transport and shipment of coal. It is also an outstanding testimony of exchange and fusion between local knowledge and practices and European technology.', '100.7379', '-0.7666', 'Asia and the Pacific', '-Indonesia', 'Asia');
 
--- --------------------------------------------------------
-
---
--- Structure de la table "t_user"
---
 
 CREATE TABLE "t_user" (
   "user_id" int NOT NULL,
@@ -1484,19 +1431,12 @@ CREATE TABLE "t_user" (
   "has_2_fa" tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Déchargement des données de la table "t_user"
---
 
 INSERT INTO "t_user" ("user_id", "username", "email", "password", "salt", "photoProfil", "dateCreation", "has_2_fa") VALUES
 (3, 'Mathieu', 'mathieu.bamert08@gmail.com', '6acb15d2be6ce0ceca197ae4f849147c63b3083e84c01a7e26cc553e4aec89c7', 'XQMG1BWHUTr+UHqGUPmKZWlFg4cqNO8uxw==', NULL, '2025-04-28 10:51:07', 0),
 (4, 'etml', 'etml@etml.com', 'efc3dda6d7d2b533dcfef323d2132ea20ed6ce9ba20e71fa2d2c194d3e869340', 'WXaI110naLyalW/MUEAQ62r+4+AUt3x+KQ==', NULL, '2025-05-26 10:55:51', 0);
 
--- --------------------------------------------------------
 
---
--- Structure de la table "t_wishlist"
---
 
 CREATE TABLE "t_wishlist" (
   "wishlist_id" int NOT NULL,
@@ -1504,133 +1444,77 @@ CREATE TABLE "t_wishlist" (
   "user_id" int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Index pour les tables déchargées
---
 
---
--- Index pour la table "t_avoir"
---
 ALTER TABLE "t_avoir"
   ADD PRIMARY KEY ("liste_favoris_id","site_id"),
   ADD KEY "site_id" ("site_id");
 
---
--- Index pour la table "t_contenir"
---
+
 ALTER TABLE "t_contenir"
   ADD PRIMARY KEY ("historique_id","site_id"),
   ADD KEY "site_id" ("site_id");
 
---
--- Index pour la table "t_historique"
---
 ALTER TABLE "t_historique"
   ADD PRIMARY KEY ("historique_id"),
   ADD KEY "user_id" ("user_id");
 
---
--- Index pour la table "t_liste_favoris"
---
+
 ALTER TABLE "t_liste_favoris"
   ADD PRIMARY KEY ("liste_favoris_id"),
   ADD KEY "user_id" ("user_id");
 
---
--- Index pour la table "t_publication"
---
+
 ALTER TABLE "t_publication"
   ADD PRIMARY KEY ("publication_id"),
   ADD KEY "user_id" ("user_id");
 
---
--- Index pour la table "t_sites"
---
+
 ALTER TABLE "t_sites"
   ADD PRIMARY KEY ("site_id");
 
---
--- Index pour la table "t_user"
---
+
 ALTER TABLE "t_user"
   ADD PRIMARY KEY ("user_id"),
   ADD UNIQUE KEY "email" ("email");
 
---
--- Index pour la table "t_wishlist"
---
+
 ALTER TABLE "t_wishlist"
   ADD PRIMARY KEY ("wishlist_id"),
   ADD KEY "user_id" ("user_id"),
   ADD KEY "site_id" ("site_id");
 
---
--- AUTO_INCREMENT pour les tables déchargées
---
-
---
--- AUTO_INCREMENT pour la table "t_historique"
---
 ALTER TABLE "t_historique"
   MODIFY "historique_id" int NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT pour la table "t_publication"
---
 ALTER TABLE "t_publication"
   MODIFY "publication_id" int NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT pour la table "t_user"
---
 ALTER TABLE "t_user"
   MODIFY "user_id" int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
---
--- AUTO_INCREMENT pour la table "t_wishlist"
---
 ALTER TABLE "t_wishlist"
   MODIFY "wishlist_id" int NOT NULL AUTO_INCREMENT;
 
---
--- Contraintes pour les tables déchargées
---
 
---
--- Contraintes pour la table "t_avoir"
---
 ALTER TABLE "t_avoir"
   ADD CONSTRAINT "avoir_ibfk_1" FOREIGN KEY ("liste_favoris_id") REFERENCES "t_wishlist" ("wishlist_id"),
   ADD CONSTRAINT "avoir_ibfk_2" FOREIGN KEY ("site_id") REFERENCES "t_sites" ("site_id");
 
---
--- Contraintes pour la table "t_contenir"
---
 ALTER TABLE "t_contenir"
   ADD CONSTRAINT "t_contenir_ibfk_1" FOREIGN KEY ("historique_id") REFERENCES "t_historique" ("historique_id"),
   ADD CONSTRAINT "t_contenir_ibfk_2" FOREIGN KEY ("site_id") REFERENCES "t_sites" ("site_id");
 
---
--- Contraintes pour la table "t_historique"
---
 ALTER TABLE "t_historique"
   ADD CONSTRAINT "t_historique_ibfk_1" FOREIGN KEY ("user_id") REFERENCES "t_user" ("user_id");
 
---
--- Contraintes pour la table "t_liste_favoris"
---
+
 ALTER TABLE "t_liste_favoris"
   ADD CONSTRAINT "t_liste_favoris_ibfk_1" FOREIGN KEY ("user_id") REFERENCES "t_user" ("user_id");
 
---
--- Contraintes pour la table "t_publication"
---
+
 ALTER TABLE "t_publication"
   ADD CONSTRAINT "t_publication_ibfk_1" FOREIGN KEY ("user_id") REFERENCES "t_user" ("user_id");
 
---
--- Contraintes pour la table "t_wishlist"
---
 ALTER TABLE "t_wishlist"
   ADD CONSTRAINT "t_wishlist_ibfk_1" FOREIGN KEY ("user_id") REFERENCES "t_user" ("user_id"),
   ADD CONSTRAINT "t_wishlist_ibfk_2" FOREIGN KEY ("site_id") REFERENCES "t_sites" ("site_id") ON DELETE RESTRICT ON UPDATE RESTRICT;
